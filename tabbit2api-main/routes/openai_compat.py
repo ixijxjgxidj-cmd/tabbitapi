@@ -538,7 +538,8 @@ async def chat_completions(
     except Exception as e:
         raise HTTPException(status_code=400, detail="Invalid request format")
     
-    use_v3 = _is_premium_model(model_id)
+    # FORCE V3 FOR ALL MODELS: Tabbit deprecated V1 endpoint
+    use_v3 = True
     is_stream = getattr(req, 'stream', False)
     
     # Session cache: reuse session for same API key + model

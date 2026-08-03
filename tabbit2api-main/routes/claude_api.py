@@ -259,7 +259,8 @@ async def claude_messages(request: Request):
 
     # Check if premium model
     from routes.openai_compat import _is_premium_model
-    use_v3 = _is_premium_model(model_id)
+    # FORCE V3 FOR ALL MODELS: Tabbit deprecated V1 endpoint
+    use_v3 = True
 
     # Session cache: get bearer for cache key
     auth_header = request.headers.get("x-api-key") or request.headers.get("authorization", "")
