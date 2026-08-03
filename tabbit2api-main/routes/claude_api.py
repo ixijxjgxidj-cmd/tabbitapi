@@ -191,6 +191,7 @@ async def _stream_claude_response(
         async for event in event_gen:
             et = event["event"]
             ed = event["data"]
+            logger.info(f"[CLAUDE_DEBUG] Tabbit Event: {et}, Data: {str(ed)[:200]}")
 
             if et == "error":
                 error_msg = ed.get("message", str(ed))
