@@ -168,6 +168,7 @@ class TabbitClient:
             "managed": "tab_browser",
             "NEXT_LOCALE": "zh",
             "SAPISID": self.user_id,
+            "chat_feature_sidebar_tabbit_redirect": "1",
         }
         if self.next_auth:
             cookies["next-auth.session-token"] = self.next_auth
@@ -298,17 +299,13 @@ class TabbitClient:
         req_trace = self._generate_uuid()
         return {
             **self._get_headers(f"/session/{room_id}"),
-            "Accept": "text/event-stream",
+            "Accept": "application/json",
             "Content-Type": "application/json",
-            "Cache-Control": "no-cache",
             "X-Req-Ctx": "MS43LjE2KDEwMTA3MDE2KQ==",
-            "X-Nonce": self._generate_nonce(),
-            "X-Timestamp": str(int(round(time.time() * 1000))),
-            "X-Signature": self._generate_uuid(),
             "Trace-Id": req_trace,
             "X-Trace-Id": req_trace,
             "Unique-Uuid": self._generate_uuid(),
-            "Baggage": f"sentry-environment=production,sentry-release=b98c2be,sentry-public_key=a9d139b726b1f610c3257be624286675,sentry-trace_id={trace_id},sentry-sampled=false,sentry-sample_rand=0.7224657403168888,sentry-sample_rate=0",
+            "Baggage": f"sentry-environment=production,sentry-release=b98c2be,sentry-public_key=a9d139b726b1f610c3257be624286675,sentry-trace_id={trace_id},sentry-transaction=%2Fsession%2F%3Aid,sentry-sampled=false,sentry-sample_rand=0.7224657403168888,sentry-sample_rate=0",
             "Sentry-Trace": f"{trace_id}-{self._generate_uuid().replace('-', '')[:16]}-0",
             "Origin": self.base_url,
         }
@@ -318,6 +315,7 @@ class TabbitClient:
         Raises exception with status code embedded for caller to handle (404 = fallback)."""
         payload = {"last_event_id": None}
         headers = self._get_v3_headers(room_id)
+        headers["Accept"] = "text/event-stream"
         url = f"{self.base_url}/api/v3/chat/rooms/{room_id}/join"
 
         async with self.client.stream(
