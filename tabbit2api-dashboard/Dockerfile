@@ -12,6 +12,8 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ENV DATABASE_URL="file:./dev.db"
+RUN npx prisma db push
 RUN npm run build
 
 FROM base AS runner
