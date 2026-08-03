@@ -44,7 +44,7 @@ export default function Dashboard() {
         const channelRes = await fetch("/api/channels");
         if (channelRes.ok) {
           const channelData = await channelRes.json();
-          setChannels(channelData.channels || []);
+          setChannels(channelData.data || []);
         }
       }
     } catch (e) {
