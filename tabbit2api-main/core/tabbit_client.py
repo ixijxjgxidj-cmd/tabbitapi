@@ -143,18 +143,20 @@ class TabbitClient:
 
     def _get_chat_headers(self, session_id: str) -> dict:
         trace_id = self._generate_uuid().replace('-', '')
+        req_trace = self._generate_uuid()
         return {
             **self._get_headers(f"/session/{session_id}"),
             "Accept": "text/event-stream",
             "Content-Type": "application/json",
             "Cache-Control": "no-cache",
             "X-Nonce": self._generate_nonce(),
-            "Trace-Id": self._generate_uuid(),
+            "Trace-Id": req_trace,
+            "X-Trace-Id": req_trace,
             "X-Timestamp": str(int(round(time.time() * 1000))),
             "Unique-Uuid": self._generate_uuid(),
             "X-Signature": self._generate_uuid(),
             "X-Req-Ctx": "MS43LjE2KDEwMTA3MDE2KQ==",
-            "Baggage": f"sentry-environment=production,sentry-release=497b9dd,sentry-public_key=a9d139b726b1f610c3257be624286675,sentry-trace_id={trace_id},sentry-sampled=false,sentry-sample_rand=0.7224657403168888,sentry-sample_rate=0",
+            "Baggage": f"sentry-environment=production,sentry-release=b98c2be,sentry-public_key=a9d139b726b1f610c3257be624286675,sentry-trace_id={trace_id},sentry-sampled=false,sentry-sample_rand=0.7224657403168888,sentry-sample_rate=0",
             "Sentry-Trace": f"{trace_id}-{self._generate_uuid().replace('-', '')[:16]}-0",
             "Origin": self.base_url,
         }
