@@ -12,7 +12,7 @@ async function getApiKey(userId: string) {
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -21,7 +21,7 @@ export async function DELETE(
   const apiKey = await getApiKey(userId);
   if (!apiKey) return NextResponse.json({ error: "No API Key found" }, { status: 400 });
 
-  const id = params.id;
+  const { id } = await params;
 
   const response = await fetch(`${GATEWAY_URL}/v1/byok/channels/${id}`, {
     method: "DELETE",
