@@ -29,6 +29,7 @@ export async function POST(req: Request) {
 
     return Response.json({ message: "User created successfully", id: user.id }, { status: 201 });
   } catch (error) {
+    console.error("Registration error:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

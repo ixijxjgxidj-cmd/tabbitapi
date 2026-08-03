@@ -33,7 +33,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modul
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
 
 # Create entrypoint inline to avoid Windows CRLF issues
-RUN printf '#!/bin/sh\nnpx prisma db push --skip-generate 2>/dev/null || true\nexec node server.js\n' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+RUN printf '#!/bin/sh\nnpx prisma db push --skip-generate\nexec node server.js\n' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 USER nextjs
 EXPOSE 3000
