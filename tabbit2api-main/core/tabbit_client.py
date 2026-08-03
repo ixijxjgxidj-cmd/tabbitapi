@@ -153,7 +153,7 @@ class TabbitClient:
             "X-Timestamp": str(int(round(time.time() * 1000))),
             "Unique-Uuid": self._generate_uuid(),
             "X-Signature": self._generate_uuid(),
-            "X-Req-Ctx": "MS42LjIwKDEwMTA2MDIwKQ==",
+            "X-Req-Ctx": "MS43LjE2KDEwMTA3MDE2KQ==",
             "Baggage": f"sentry-environment=production,sentry-release=497b9dd,sentry-public_key=a9d139b726b1f610c3257be624286675,sentry-trace_id={trace_id},sentry-sampled=false,sentry-sample_rand=0.7224657403168888,sentry-sample_rate=0",
             "Sentry-Trace": f"{trace_id}-{self._generate_uuid().replace('-', '')[:16]}-0",
             "Origin": self.base_url,
@@ -298,7 +298,7 @@ class TabbitClient:
             "Accept": "text/event-stream",
             "Content-Type": "application/json",
             "Cache-Control": "no-cache",
-            "X-Req-Ctx": "MS42LjIwKDEwMTA2MDIwKQ==",
+            "X-Req-Ctx": "MS43LjE2KDEwMTA3MDE2KQ==",
             "Baggage": f"sentry-environment=production,sentry-release=497b9dd,sentry-public_key=a9d139b726b1f610c3257be624286675,sentry-trace_id={trace_id},sentry-sampled=false,sentry-sample_rand=0.7224657403168888,sentry-sample_rate=0",
             "Sentry-Trace": f"{trace_id}-{self._generate_uuid().replace('-', '')[:16]}-0",
             "Origin": self.base_url,
@@ -356,7 +356,7 @@ class TabbitClient:
         headers = {
             **self._get_headers(f"/session/{room_id}"),
             "Content-Type": "application/json",
-            "X-Req-Ctx": "MS42LjIwKDEwMTA2MDIwKQ==",
+            "X-Req-Ctx": "MS43LjE2KDEwMTA3MDE2KQ==",
             "Origin": self.base_url,
         }
         resp = await self.client.post(
