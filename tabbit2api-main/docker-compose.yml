@@ -1,0 +1,47 @@
+services:
+  tabbit2api:
+    build: .
+    container_name: tabbit2api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8800}:8800"
+    volumes:
+      - tabbit2api_data:/app/data
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1
+      - REDIS_URL=redis://redis:6379/0
+      - TABBIT_MASTER_KEY=${TABBIT_MASTER_KEY:-super-secret-master-key-12345678}
+    depends_on:
+      - redis
+    networks:
+      - tabbit2api_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8800/v1/models')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  redis:
+    image: redis:7-alpine
+    container_name: tabbit2api_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - tabbit2api_net
+
+volumes:
+  tabbit2api_data:
+  redis_data:
+
+networks:
+  tabbit2api_net:
+    driver: bridge

@@ -1,0 +1,55 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: tabbit2api_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - tabbit_net
+
+  api_gateway:
+    build:
+      context: ./tabbit2api-main
+      dockerfile: Dockerfile
+    container_name: tabbit2api_gateway
+    restart: unless-stopped
+    ports:
+      - "8800:8800"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - TZ=Asia/Shanghai
+    depends_on:
+      - redis
+    networks:
+      - tabbit_net
+    volumes:
+      - gateway_data:/app/data
+
+  dashboard:
+    build:
+      context: ./tabbit2api-dashboard
+      dockerfile: Dockerfile
+    container_name: tabbit2api_dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXTAUTH_URL=http://137.184.101.18:3000
+      - NEXTAUTH_SECRET=my-super-secret-12345
+      - DATABASE_URL=file:/app/prisma/dev.db
+    depends_on:
+      - api_gateway
+    networks:
+      - tabbit_net
+    volumes:
+      - dashboard_db:/app/prisma
+
+volumes:
+  redis_data:
+  gateway_data:
+  dashboard_db:
+
+networks:
+  tabbit_net:
+    driver: bridge
