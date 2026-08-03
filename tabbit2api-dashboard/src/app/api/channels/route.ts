@@ -20,6 +20,7 @@ export async function GET(req: Request) {
 
   const response = await fetch(`${GATEWAY_URL}/v1/byok/channels`, {
     headers: { Authorization: `Bearer ${apiKey}` },
+    cache: 'no-store'
   });
 
   const data = await response.json();
