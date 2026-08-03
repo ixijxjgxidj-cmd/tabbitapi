@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
-const GATEWAY_URL = "http://localhost:8800";
+const GATEWAY_URL = process.env.GATEWAY_URL || "http://api_gateway:8800";
 
 async function getApiKey(userId: string) {
   const key = await prisma.apiKey.findFirst({ where: { userId } });
